@@ -1,9 +1,35 @@
 using System.Collections.Generic;
+using System.Linq;
+using Code1stlab.Data;
 using Code1stlab.Models;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 
-
-    public class SampleData
+public class SampleData
     {
+    public static void Initialize(IApplicationBuilder app) {
+    using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+    {
+      var context = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
+      context.Database.EnsureCreated();
+
+        // Look for any ailments
+        if (context.Cities != null && context.Cities.Any())
+          return;   // DB has already been seeded
+    
+        if (context.Provinces != null && context.Provinces.Any())
+          return; 
+
+      var Cities = SampleData.GetCities().ToArray();
+      context.Cities.AddRange(Cities);
+      context.SaveChanges();
+
+      var Provinces = SampleData.GetProvinces().ToArray();
+      context.Provinces.AddRange(Provinces);
+      context.SaveChanges();
+        }
+    }
+
         public static List<Province> GetProvinces() {
             List<Province> Provinces = new List<Province>() {
                 new Province() {

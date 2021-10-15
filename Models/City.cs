@@ -1,6 +1,5 @@
 using System.ComponentModel.DataAnnotations.Schema;
-
-
+using System.ComponentModel.DataAnnotations;
 namespace Code1stlab.Models
 {
     public class City
@@ -8,6 +7,7 @@ namespace Code1stlab.Models
         
         public int CityId { get;set; }
 
+        [Display(Name="City")]
         public string CityName { get;set; }
 
         public int Population { get;set; }
